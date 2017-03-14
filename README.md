@@ -18,7 +18,7 @@ For subsequent rounds, the same process is repeated, but it uses a conditional p
 P(A|B) = P(A and B) / P(B)
 ```
 
-The value we want to use is `P(A|B)`, the probability of the team winning the round. The Five Thirty Eight forecast will give us the `P(A and B)` value from their forecast. We can then use the probability of winning the previous round (`P(B)`) to finish the formula.
+The value we want to use is `P(A|B)`, the probability of the team winning the round (given that they won the previous round). The Five Thirty Eight forecast will give us the `P(A and B)` value from their forecast. We can then use the probability of winning the previous round (`P(B)`) to finish the formula.
 
 This process is repeated, round by round, until only one team remains.
 
