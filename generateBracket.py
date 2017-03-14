@@ -3,15 +3,18 @@ import sys
 from random import random
 
 def main(args):
-    sortedData = sorted(readRawData(), cmp=sortData)
-    for row in sortedData: print(row[TEAM_NAME] + '(' + row[TEAM_SEED] + ') ' + row[TEAM_REGION])
-    round1Victors = round1(sortedData)
     roundMap = [('Round 2', RD3_WIN), ('Sweet 16', RD4_WIN), ('Elite Eight', RD5_WIN), ('Final 4', RD6_WIN), ('Championship', RD7_WIN)]
-    previousRoundVictors = round1Victors
+    sortedData = sorted(readRawData(), cmp=sortData)
+    previousRoundVictors = round1(sortedData)
     for roundName, roundIndex in roundMap:
         previousRoundVictors = roundN(previousRoundVictors, roundIndex, roundName)
 
 def round1(data):
+    """
+    Round 1 is easier to calculate than subsequent rounds.
+    Take a parameter that is the list of rows (sorted) with the necessary data.
+    return the winning teams for round one in a tuple with the percentage chance of winning.
+    """
     round1Victors = []
     for i in range(0, len(data), 2):
         if float(data[i][RD2_WIN]) >= random():
@@ -20,10 +23,21 @@ def round1(data):
             round1Victors.append((data[i+1], data[i+1][RD2_WIN]))
     print('')
     print('Round 1 Winners')
+    print('-------------------')
     for r, v in round1Victors: print(r[TEAM_NAME] + '(' + r[TEAM_SEED] + ') ' + r[TEAM_REGION])
     return round1Victors
 
 def roundN(dataMap, roundIndex, roundName):
+    """
+    Calculating winners for subsequent rounds is more complex. It requires computing
+    conditional probability based on the chance of winning the previous round.
+    Prints the results at the end of the computation.
+
+    Parameters
+    dataMap - list of tuples with the data row and the probability of winning previous round.
+    roundIndex - Denotes where the win probability is in the CSV file
+    roundName - the name of this particular round.
+    """
     roundVictors = []
     for i in range(0, len(dataMap), 2):
         team1Data, team1PreviousWin = dataMap[i]
@@ -38,28 +52,22 @@ def roundN(dataMap, roundIndex, roundName):
         actualWin1 = roundWinProb1 / totalProb
         actualWin2 = roundWinProb2 / totalProb
 
-        print(team1Data[TEAM_NAME] + ' 538 round: ' + str(conditionalWin1) + ' conditional: ' + str(roundWinProb1) + ' actual: ' + str(actualWin1))
-        print(team2Data[TEAM_NAME] + ' 538 round: ' + str(conditionalWin2) + ' conditional: ' + str(roundWinProb2) + ' actual: ' + str(actualWin2))
-
-        randomValue = random()
-        print('random value:' + str(randomValue))
-        if actualWin1 >= randomValue:
+        if actualWin1 >= random():
             roundVictors.append((team1Data, actualWin1))
         else:
             roundVictors.append((team2Data, actualWin2))
     print('')
     print(roundName + ' Winners')
+    print('-------------------')
     for r, v in roundVictors: print(r[TEAM_NAME] + '(' + r[TEAM_SEED] + ') ' + r[TEAM_REGION])
     return roundVictors
 
-
-
-'''
-Sort the bracket data to be in competition order.
-First sort by region: East, West, Midwest, South
-Then sort by seed. 1,16,8,9 etc. such that teams that play each other are adjacent
-'''
 def sortData(line1, line2):
+    """
+    Sort the bracket data to be in competition order.
+    First sort by region: East, West, Midwest, South
+    Then sort by seed. 1,16,8,9 etc. such that teams that play each other are adjacent
+    """
     regionSort = {'East': 0, 'West': 1, 'Midwest': 2, 'South': 3}
     bracketSort = {1: 0, 16: 1, 8: 2, 9: 3, 5: 4, 12: 5, 4: 6, 13: 7, 6: 8, 11: 9, 3: 10, 14: 11, 7: 12, 10: 13, 2: 14, 15: 15 }
     region1 = line1[TEAM_REGION]
