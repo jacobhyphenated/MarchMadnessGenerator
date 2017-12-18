@@ -9,7 +9,7 @@ You need to have python installed.
 1. run `python generateBracket.py`
 
 ### How does it work?
-The starting point is the data that drives the Five Thirty Eight 2017 March Madness Predictions. This is available as a csv file from there website. A copy of that data is included in this project.
+The starting point is the data that drives the Five Thirty Eight 2017 March Madness Predictions. This is available as a csv file from their website. A copy of that data is included in this project.
 
 The program will go round by round calculating the winner based on the 538 projection. For example, if a team has an 80% chance to win the first round, and you run this program 1000 times, you would expect to see that team win about 800 times.
 
