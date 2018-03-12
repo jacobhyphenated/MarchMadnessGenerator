@@ -1,5 +1,5 @@
 ## March Madness Bracket Generator
-Intelligently generate your 2017 March Madness Bracket. This script will generate a different bracket every time it is run. It uses a combination of random numbers and the [Five Thirty Eight Forecast]( https://projects.fivethirtyeight.com/2017-march-madness-predictions/) to stochastically generate a bracket, telling you which team it expects to win each round.
+Intelligently generate your 2018 March Madness Bracket. This script will generate a different bracket every time it is run. It uses a combination of random numbers and the [Five Thirty Eight Forecast](https://projects.fivethirtyeight.com/2018-march-madness-predictions/) to stochastically generate a bracket, telling you which team it expects to win each round.
 
 ### Running this script
 You need to have python installed.
@@ -9,7 +9,7 @@ You need to have python installed.
 1. run `python generateBracket.py`
 
 ### How does it work?
-The starting point is the data that drives the Five Thirty Eight 2017 March Madness Predictions. This is available as a csv file from their website. A copy of that data is included in this project.
+The starting point is the data that drives the Five Thirty Eight 2018 March Madness Predictions. This is available as a csv file from their website. A copy of that data is included in this project.
 
 The program will go round by round calculating the winner based on the 538 projection. For example, if a team has an 80% chance to win the first round, and you run this program 1000 times, you would expect to see that team win about 800 times.
 
@@ -31,7 +31,7 @@ There are still some teams that are not decided at the time of writing this. As 
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2017 Jacob Kanipe-Illig
+Copyright (c) 2018 Jacob Kanipe-Illig
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
