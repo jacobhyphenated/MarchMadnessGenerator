@@ -68,7 +68,7 @@ def sortData(line1, line2):
     First sort by region: East, West, Midwest, South
     Then sort by seed. 1,16,8,9 etc. such that teams that play each other are adjacent
     """
-    regionSort = {'East': 0, 'West': 1, 'Midwest': 2, 'South': 3}
+    regionSort = {'East': 2, 'West': 1, 'Midwest': 3, 'South': 0}
     bracketSort = {1: 0, 16: 1, 8: 2, 9: 3, 5: 4, 12: 5, 4: 6, 13: 7, 6: 8, 11: 9, 3: 10, 14: 11, 7: 12, 10: 13, 2: 14, 15: 15 }
     region1 = line1[TEAM_REGION]
     region2 = line2[TEAM_REGION]
