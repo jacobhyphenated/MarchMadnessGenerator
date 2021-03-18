@@ -22,6 +22,13 @@ The value we want to use is `P(A|B)`, the probability of the team winning the ro
 
 This process is repeated, round by round, until only one team remains.
 
+### Defining the random seed
+If you'd like to set the random seed used to generate the brackets, run
+```
+python generateBracket.py seed
+```
+where `seed` is the seed you would like to use.  This allows you to re-create a bracket using a given seed. 
+
 ### Future Enhancements
 Right now this program just outputs all of the results straight to the console. It would be cool to add a formatted UI. Pull requests welcome ;)
 

@@ -1,8 +1,12 @@
 import csv
 import sys
-from random import random
+import random
 
 def main(args):
+    if len(args) > 1:
+        random.seed(args[1])
+        print('Using random seed ' + args[1])
+        print('-------------------')
     roundMap = [('Round 2', RD3_WIN), ('Sweet 16', RD4_WIN), ('Elite Eight', RD5_WIN), ('Final 4', RD6_WIN), ('Championship', RD7_WIN)]
     sortedData = sorted(readRawData(), cmp=sortData)
     previousRoundVictors = round1(sortedData)
@@ -17,7 +21,7 @@ def round1(data):
     """
     round1Victors = []
     for i in range(0, len(data), 2):
-        if float(data[i][RD2_WIN]) >= random():
+        if float(data[i][RD2_WIN]) >= random.random():
             round1Victors.append((data[i], data[i][RD2_WIN]))
         else:
             round1Victors.append((data[i+1], data[i+1][RD2_WIN]))
@@ -52,7 +56,7 @@ def roundN(dataMap, roundIndex, roundName):
         actualWin1 = roundWinProb1 / totalProb
         actualWin2 = roundWinProb2 / totalProb
 
-        if actualWin1 >= random():
+        if actualWin1 >= random.random():
             roundVictors.append((team1Data, actualWin1))
         else:
             roundVictors.append((team2Data, actualWin2))
