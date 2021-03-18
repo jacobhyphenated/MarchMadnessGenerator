@@ -8,6 +8,12 @@ You need to have python installed.
 1. Using a command line program, go to the cloned directory
 1. run `python generateBracket.py`
 
+### Output Format
+By default the script will print the random winners of each round in the console. You can also choose a different output format by running `python generateBracket.py -o json`. The currently available output options are:
+* `print` - the default, prints text into the console
+* `json` - creates a json object structure mapping rounds to an array of winners
+* `json-region` - further nests the json object with by mapping the region of each winning team within each round
+
 ### How does it work?
 The starting point is the data that drives the Five Thirty Eight March Madness Predictions. This is available as a csv file from their website. A copy of that data is included in this project.
 
@@ -25,15 +31,12 @@ This process is repeated, round by round, until only one team remains.
 ### Defining the random seed
 If you'd like to set the random seed used to generate the brackets, run
 ```
-python generateBracket.py seed
+python generateBracket.py --seed=<seed>
 ```
-where `seed` is the seed you would like to use.  This allows you to re-create a bracket using a given seed. 
-
-### Future Enhancements
-Right now this program just outputs all of the results straight to the console. It would be cool to add a formatted UI. Pull requests welcome ;)
+where `<seed>` is the seed you would like to use.  This allows you to re-create a bracket using a given seed. 
 
 ### Qualifying Games
-There are still some teams that are not decided at the time of writing this. As qualifying matches are completed, I will update the csv file with the probability data to account for any changes.
+Often, probability forecasts will be published before all qualifying and play-in games are finished. This generator will reflect that uncertainty. As qualifying matches are completed, I will update the csv file with the probability data to account for any changes.
 
 ## License
 The MIT License (MIT)

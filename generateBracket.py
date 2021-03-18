@@ -1,47 +1,69 @@
 import csv
 import sys
+import getopt
+import json
 import random
+from collections import OrderedDict
 
 def main(args):
-    if len(args) > 1:
-        random.seed(args[1])
-        print('Using random seed ' + args[1])
-        print('-------------------')
+    try:
+        opts, _ = getopt.getopt(args[1:], 'ho:s:', ['help', 'output=','seed='])
+    except getopt.GetoptError as err:
+        print(err)
+        usage()
+        sys.exit(2)
+
+    outputFormat = 'print'
+    for o, a in opts:
+        if o in ("-h", "--help"):
+            usage()
+            sys.exit()
+        if o in ("-o", "--output"):
+            outputFormat = a
+        if o in ("-s", "--seed"):
+            random.seed(a)
+
     roundMap = [('Round 2', RD3_WIN), ('Sweet 16', RD4_WIN), ('Elite Eight', RD5_WIN), ('Final 4', RD6_WIN), ('Championship', RD7_WIN)]
     sortedData = sorted(readRawData(), cmp=sortData)
-    previousRoundVictors = round1(sortedData)
+    results = []
+    previousRoundVictors = round1(sortedData, results)
     for roundName, roundIndex in roundMap:
-        previousRoundVictors = roundN(previousRoundVictors, roundIndex, roundName)
+        previousRoundVictors = roundN(previousRoundVictors, roundIndex, roundName, results)
 
-def round1(data):
-    """
-    Round 1 is easier to calculate than subsequent rounds.
-    Take a parameter that is the list of rows (sorted) with the necessary data.
-    return the winning teams for round one in a tuple with the percentage chance of winning.
-    """
+    handleResults(results, outputFormat)
+
+def usage():
+    print("Tool to help randomly create a March Madness bracket.")
+    print("    -h --help\t\tinformation about this command")
+    print("    -o --output\t\tOptionally specify an output format. Options are 'print', 'json', 'json-region'. Defaults to print.")
+    print("    -s --seed\t\tSpecify the random seed")
+
+"""
+Round 1 is easier to calculate than subsequent rounds.
+Take a parameter that is the list of rows (sorted) with the necessary data.
+return the winning teams for round one in a tuple with the percentage chance of winning.
+"""
+def round1(data, results):
     round1Victors = []
     for i in range(0, len(data), 2):
         if float(data[i][RD2_WIN]) >= random.random():
             round1Victors.append((data[i], data[i][RD2_WIN]))
         else:
             round1Victors.append((data[i+1], data[i+1][RD2_WIN]))
-    print('')
-    print('Round 1 Winners')
-    print('-------------------')
-    for r, v in round1Victors: print(r[TEAM_NAME] + '(' + r[TEAM_SEED] + ') ' + r[TEAM_REGION])
+    results.append(('Round 1', [r for r, v in round1Victors]))
     return round1Victors
 
-def roundN(dataMap, roundIndex, roundName):
-    """
-    Calculating winners for subsequent rounds is more complex. It requires computing
-    conditional probability based on the chance of winning the previous round.
-    Prints the results at the end of the computation.
+"""
+Calculating winners for subsequent rounds is more complex. It requires computing
+conditional probability based on the chance of winning the previous round.
+Prints the results at the end of the computation.
 
-    Parameters
-    dataMap - list of tuples with the data row and the probability of winning previous round.
-    roundIndex - Denotes where the win probability is in the CSV file
-    roundName - the name of this particular round.
-    """
+Parameters
+dataMap - list of tuples with the data row and the probability of winning previous round.
+roundIndex - Denotes where the win probability is in the CSV file
+roundName - the name of this particular round.
+"""
+def roundN(dataMap, roundIndex, roundName, results):
     roundVictors = []
     for i in range(0, len(dataMap), 2):
         team1Data, team1PreviousWin = dataMap[i]
@@ -60,18 +82,16 @@ def roundN(dataMap, roundIndex, roundName):
             roundVictors.append((team1Data, actualWin1))
         else:
             roundVictors.append((team2Data, actualWin2))
-    print('')
-    print(roundName + ' Winners')
-    print('-------------------')
-    for r, v in roundVictors: print(r[TEAM_NAME] + '(' + r[TEAM_SEED] + ') ' + r[TEAM_REGION])
+    results.append((roundName, [r for r, v in roundVictors]))
     return roundVictors
 
+"""
+Sort the bracket data to be in competition order.
+First sort by region: East, West, Midwest, South
+Then sort by seed. 1,16,8,9 etc. such that teams that play each other are adjacent
+Note that the region order changes from year to year.
+"""
 def sortData(line1, line2):
-    """
-    Sort the bracket data to be in competition order.
-    First sort by region: East, West, Midwest, South
-    Then sort by seed. 1,16,8,9 etc. such that teams that play each other are adjacent
-    """
     regionSort = {'West': 0, 'East': 1, 'Midwest': 3, 'South': 2}
     bracketSort = {1: 0, 16: 1, 8: 2, 9: 3, 5: 4, 12: 5, 4: 6, 13: 7, 6: 8, 11: 9, 3: 10, 14: 11, 7: 12, 10: 13, 2: 14, 15: 15 }
     region1 = line1[TEAM_REGION]
@@ -87,6 +107,32 @@ def readRawData():
         rawForcastData = [row for row in reader]
     return rawForcastData[1:]
 
+def handleResults(results, outputFormat):
+    if outputFormat == 'print':
+        for roundName, roundResults in results:
+            print('')
+            print(roundName + ' Winners')
+            print('-------------------')
+            for r in roundResults: print(r[TEAM_NAME] + '(' + r[TEAM_SEED] + ') ' + r[TEAM_REGION])
+    elif outputFormat == 'json-region':
+        output = OrderedDict()
+        for roundName, roundResults in results:
+            roundDict = OrderedDict()
+            for r in roundResults:
+                region = r[TEAM_REGION]
+                name = r[TEAM_NAME] + '(' + r[TEAM_SEED] + ')'
+                if region in roundDict: roundDict[region].append(name)
+                else: roundDict[region] = [name]
+            output[roundName] = roundDict
+        print(json.dumps(output, indent=2))
+    elif outputFormat == 'json':
+        output = OrderedDict()
+        for roundName, roundResults in results:
+            output[roundName] = [r[TEAM_NAME] + '(' + r[TEAM_SEED] + ') ' + r[TEAM_REGION] for r in roundResults]
+        print(json.dumps(output, indent=2))
+    else:
+        print(outputFormat + ' is not a valid output format')
+        sys.exit(1)
 
 # CSV Index Constants
 GENDER = 0
