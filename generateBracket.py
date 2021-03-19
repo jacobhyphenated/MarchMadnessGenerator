@@ -56,12 +56,12 @@ def round1(data, results):
 """
 Calculating winners for subsequent rounds is more complex. It requires computing
 conditional probability based on the chance of winning the previous round.
-Prints the results at the end of the computation.
 
 Parameters
 dataMap - list of tuples with the data row and the probability of winning previous round.
 roundIndex - Denotes where the win probability is in the CSV file
 roundName - the name of this particular round.
+results - data structure to store the winning teams in each round
 """
 def roundN(dataMap, roundIndex, roundName, results):
     roundVictors = []
