@@ -1,8 +1,8 @@
 ## March Madness Bracket Generator
-Intelligently generate your 2021 March Madness Bracket. This script will generate a different bracket every time it is run. It uses a combination of random numbers and the [Five Thirty Eight Forecast](https://projects.fivethirtyeight.com/2021-march-madness-predictions/) to stochastically generate a bracket, telling you which team it expects to win each round.
+Intelligently generate your 2022 March Madness Bracket. This script will generate a different bracket every time it is run. It uses a combination of random numbers and the [Five Thirty Eight Forecast](https://projects.fivethirtyeight.com/2022-march-madness-predictions/) to stochastically generate a bracket, telling you which team it expects to win each round.
 
 ### Running this script
-You need to have python installed.
+You need to have python 3 installed.
 
 1. Clone this project
 1. Using a command line program, go to the cloned directory
@@ -41,7 +41,7 @@ Often, probability forecasts will be published before all qualifying and play-in
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2021 Jacob Kanipe-Illig
+Copyright (c) 2022 Jacob Kanipe-Illig
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

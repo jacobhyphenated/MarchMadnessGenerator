@@ -4,6 +4,7 @@ import getopt
 import json
 import random
 from collections import OrderedDict
+from functools import cmp_to_key
 
 def main(args):
     try:
@@ -24,7 +25,7 @@ def main(args):
             random.seed(a)
 
     roundMap = [('Round 2', RD3_WIN), ('Sweet 16', RD4_WIN), ('Elite Eight', RD5_WIN), ('Final 4', RD6_WIN), ('Championship', RD7_WIN)]
-    sortedData = sorted(readRawData(), cmp=sortData)
+    sortedData = sorted(readRawData(), key=cmp_to_key(sortData))
     results = []
     previousRoundVictors = round1(sortedData, results)
     for roundName, roundIndex in roundMap:
@@ -102,7 +103,7 @@ def sortData(line1, line2):
 
 
 def readRawData():
-    with open('fivethirtyeight_ncaa_forecasts.csv', 'rb') as f:
+    with open('fivethirtyeight_ncaa_forecasts.csv', 'r', encoding="utf8") as f:
         reader = csv.reader(f)
         rawForcastData = [row for row in reader]
     return rawForcastData[1:]
